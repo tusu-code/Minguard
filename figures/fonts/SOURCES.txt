@@ -1,0 +1,5 @@
+Fig. 1 用到的字体（2026-10-30 从 Fontsource 的 jsDelivr CDN 下载静态 TTF，latin 子集）
+- Nunito（正文，400 / 400 italic / 700 / 800）— Vernon Adams, Cyreal, Jacques Le Bailly — SIL Open Font License 1.1 — https://github.com/googlefonts/nunito
+- Fredoka（标题，500 / 600）— Milena Brandão, Hafontia — SIL Open Font License 1.1 — https://github.com/hafontia-zz/Fredoka
+- DejaVu Sans Mono（SQL 片段）— 系统已安装 — Bitstream Vera / DejaVu 许可
+OFL 允许把字体嵌入 PDF 并随论文分发。

@@ -1,0 +1,73 @@
+{
+ "n": 3893,
+ "pg_errors": 312,
+ "pg_error_kinds": [
+  [
+   "UndefinedFunction",
+   260
+  ],
+  [
+   "GroupingError",
+   22
+  ],
+  [
+   "CardinalityViolation",
+   16
+  ],
+  [
+   "UndefinedColumn",
+   6
+  ],
+  [
+   "InvalidTextRepresentation",
+   3
+  ],
+  [
+   "InvalidDatetimeFormat",
+   2
+  ],
+  [
+   "DatatypeMismatch",
+   2
+  ],
+  [
+   "UndefinedTable",
+   1
+  ]
+ ],
+ "timeouts": 0,
+ "both_ran": 3581,
+ "rows_equal": 3577,
+ "pg_exec": {
+  "50": 1.664668999865171,
+  "95": 57.048430999998345,
+  "99": 121.24058039998948,
+  "max": 2285.473167999953,
+  "n": 3581
+ },
+ "sqlite_exec": {
+  "50": 0.9936999999808904,
+  "95": 253.14042899992728,
+  "99": 344.6980207999778,
+  "max": 2725.1619459998437,
+  "n": 3581
+ },
+ "pg_contrib": {
+  "50": 1.6465069999753723,
+  "95": 51.14041090012051,
+  "99": 74.59577918999118,
+  "max": 519.8455139999396,
+  "n": 1360
+ },
+ "pg_explain": {
+  "50": 0.5014470000332949,
+  "95": 0.8912171000929433,
+  "99": 1.0639819099696977,
+  "max": 2.281063000054928,
+  "n": 3598
+ },
+ "explain_within_2x": 0.8813180675788885,
+ "explain_within_10x": 0.9581122591454901,
+ "empty_results": 251,
+ "empty_estimated_nonzero": 251
+}

@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+tables/
+data/dev_20240627/
+figures/*.png
+figures/*.pdf
