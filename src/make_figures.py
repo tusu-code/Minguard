@@ -32,13 +32,16 @@ SHORT = {
     "jev27b_decomposed": "MinGuard with JEV-27B", "jev_holistic": "Jev, one question",
     "jev27b_holistic": "JEV-27B, one question", "jev_holistic_raw": "Jev, one quest., no facts",
     "readout_decomposed": "Qwen3.5-4B readout", "readout_holistic": "Qwen3.5-4B, one quest.",
+    "llm_deepseek_decomposed": "DeepSeek-V3.2, decomp.",
+    "base27b_decomposed": "Qwen3.8-27B readout", "base27b_holistic": "Qwen3.8-27B, one quest.",
     "llm_deepseek": "DeepSeek-V3.2 judge", "llm_qwen235b": "Qwen3-235B judge",
     "clf_src": "ModernBERT, dev", "clf_src_cal": "ModernBERT, dev + target",
     "string_match": "Keyword rule", "jev_decomposed": "MinGuard",
 }
 GROUP = {"jev27b_decomposed": C["blue"], "jev_holistic": C["blue"], "jev27b_holistic": C["blue"],
          "jev_holistic_raw": C["blue"], "readout_decomposed": C["purple"], "readout_holistic": C["purple"],
-         "llm_deepseek": C["orange"], "llm_qwen235b": C["orange"], "clf_src": C["gray"], "clf_src_cal": C["gray"],
+         "base27b_decomposed": C["purple"], "base27b_holistic": C["purple"],
+         "llm_deepseek_decomposed": C["orange"], "llm_deepseek": C["orange"], "llm_qwen235b": C["orange"], "clf_src": C["gray"], "clf_src_cal": C["gray"],
          "string_match": C["green"], "jev_decomposed": C["blue"]}
 
 
@@ -72,10 +75,16 @@ def compute() -> dict:
     return data
 
 
+# 图里只画每个判官的主变体；单问题的开源变体（JEV-27B、两个读出）只在 Table 里
+DIFF_GUARDS = [g for g in M.MAIN_GUARDS[1:] if g not in ("jev27b_holistic", "readout_holistic", "base27b_holistic")]
+RISK_FIG_GUARDS = [g for g in M.RISK_GUARDS if g != "readout_decomposed"]
+
+
 def fig_diff(d, title_font):
-    guards = M.MAIN_GUARDS[1:]
+    guards = DIFF_GUARDS
     fig, axes = plt.subplots(1, 4, figsize=(7.16, 2.35), sharey=True)
-    lo_all = min(v[1] for v in d["diff"].values()); hi_all = max(v[2] for v in d["diff"].values())
+    vals = [d["diff"][f"{b}|{g}"] for b in M.BENCH_NAMES for g in guards]
+    lo_all = min(v[1] for v in vals); hi_all = max(v[2] for v in vals)
     for ax, (b, name) in zip(axes, M.BENCH_NAMES.items()):
         ax.axvspan(lo_all - 0.05, 0, color=C["light"], zorder=0)
         ax.axvline(0, color=C["gray"], lw=0.7, zorder=1)
@@ -109,7 +118,7 @@ def fig_diff(d, title_font):
 
 
 def fig_risk(d, title_font):
-    guards = M.RISK_GUARDS
+    guards = RISK_FIG_GUARDS
     fig, axes = plt.subplots(1, 4, figsize=(7.16, 2.2), sharey=True)
     for ax, (b, name) in zip(axes, M.BENCH_NAMES.items()):
         for k, g in enumerate(guards):

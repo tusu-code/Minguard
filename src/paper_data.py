@@ -80,6 +80,12 @@ def load(bench: str) -> tuple[dict, dict]:
     if (RUNS / "scores_fusion.jsonl").exists():          # 融合方式消融（fusion_ablation.py）
         S = _merge(S, _read(RUNS / "scores_fusion.jsonl"))
         _fill_det(S, ["fuse_max", "fuse_mean", "fuse_noisyor", "fuse_learned"])
+    if (RUNS / "scores_llm_decomp.jsonl").exists():      # 审稿意见补的 DeepSeek-V3.2 + 单事实问题（llm_decomposed.py）
+        S = _merge(S, _read(RUNS / "scores_llm_decomp.jsonl"))
+        _fill_det(S, ["llm_deepseek_decomposed"])
+    if (RUNS / "scores_base27b.jsonl").exists():         # 审稿意见补的独立开源基线：27B 底座、不加 Jev 适配器（base27b_score.py）
+        S = _merge(S, _read(RUNS / "scores_base27b.jsonl"))
+        _fill_det(S, ["base27b_decomposed", "base27b_holistic"])
     if (RUNS / "scores_jev27b.jsonl").exists():          # 开源复现 JEV-27B（jev27b_score.py）
         S = _merge(S, _read(RUNS / "scores_jev27b.jsonl"))
         _fill_det(S, ["jev27b_decomposed", "jev27b_holistic"])
