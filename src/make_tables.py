@@ -62,10 +62,11 @@ def tab_dbs() -> None:
         cats = Counter(c for t in sch for _, c in dbmeta.personal_columns(db, t))
         rows.append((db, len(sch), sum(len(v) for v in sch.values()), sum(cats.values()),
                      sum(1 for x in d if x["db_id"] == db), "design" if db in dbmeta.PILOT_DBS else "final"))
-    short = {"thrombosis_prediction": "thrombosis", "student_club": "student\\_club", "financial": "financial",
-             "codebase_community": "codebase", "formula_1": "formula\\_1", "european_football_2": "football",
-             "california_schools": "ca\\_schools"}
-    body = "\n".join(rf"\texttt{{{short[db]}}} & {t} & {c} & {p} & {q} & {u} \\"
+    # 库名用正文字体的普通写法（BIRD 原名见代码包 dbmeta.py）
+    short = {"thrombosis_prediction": "Thrombosis", "student_club": "Student club", "financial": "Financial",
+             "codebase_community": "Codebase community", "formula_1": "Formula 1",
+             "european_football_2": "European football", "california_schools": "California schools"}
+    body = "\n".join(rf"{short[db]} & {t} & {c} & {p} & {q} & {u} \\"
                       for db, t, c, p, q, u in rows)
     tot = [sum(r[i] for r in rows) for i in (1, 2, 3, 4)]
     write("dbs", rf"""\begin{{table}}[t]
@@ -144,7 +145,11 @@ def tab_main() -> None:
             lines.append(r"\addlinespace")
     ns = " & ".join(f"{len(tests[b])}/{sum(data[b][0][i]['label'] for i in tests[b])}" for b in BENCH_NAMES)
     write("main", r"""\begin{table}[t]
-\caption{AUROC on the test half of judged requests ($n$/positives below). Bold: best per column.}
+\caption{AUROC on the test half of judged requests ($n$/positives below). After the comma, a row says how the
+model is used: decomp.\ asks \sys's single-fact questions and fuses them by the maximum, one quest.\ asks one
+violation question, + facts or no facts says whether the verified facts are in the state, and dev data or
+dev + target is the classifier's training data. \sys, JEV-27B runs \sys with the open JEV-27B in place of
+Jev~1.13. Bold: best per column.}
 \label{tab:main}
 \centering\footnotesize
 \setlength{\tabcolsep}{2.5pt}
@@ -240,7 +245,7 @@ ABLATIONS = [
     ("Mean fusion", "fuse_mean", "average of violation terms instead of max"),
     ("Noisy-OR fusion", "fuse_noisyor", "$1-\\prod(1-v)$ over violation terms"),
     ("Learned fusion", "fuse_learned", "logistic regression on dev data"),
-    ("Ungated fusion", "jev_decomposed_oldfuse", "aggregate\\_only fused unconditionally (pre-fix)"),
+    ("Ungated fusion", "jev_decomposed_oldfuse", "aggregate-only fused unconditionally (pre-fix)"),
     ("Cacheable questions", "jev_cacheable", "one call per question, SQL-free states"),
     ("Row conditions (frozen)", "jev_decomposed_v2", "add row conditions; new scope question"),
 ]
@@ -321,7 +326,7 @@ def tab_eff() -> None:
     write("eff", rf"""\begin{{table}}[t]
 \caption{{Efficiency on the natural output distribution of OmniSQL-7B ({n} deduplicated requests; the fact
 layer allows {100 * allow:.1f}\% outright). (a) Fact-layer latency in ms. (b) End-to-end guard throughput and
-latency in ms on 400 sampled requests, Jev calls uncached. (c) Judge cost and mean latency per request, with the
+latency in ms on 400 sampled requests, Jev calls uncached. (c) Judge cost and mean latency per request over all requests, with the
 judged fraction of {100 * frac:.1f}\%.}}
 \label{{tab:eff}}
 \centering\footnotesize

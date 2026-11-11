@@ -23,7 +23,7 @@ import evaluate as E
 import make_tables as M
 import paper_data as P
 
-OUT = dbmeta.ROOT / "figures"
+OUT = dbmeta.ROOT.parent / "paper" / "figures"
 FONTS = OUT / "fonts"
 CACHE = P.RUNS / "fig_data.json"
 C = dict(blue="#2F6FD0", orange="#E07B2E", purple="#7353BA", green="#2E9B5B", red="#D2453A", gray="#5B6670",
@@ -96,9 +96,7 @@ def fig_diff(d, title_font):
             ax.plot(m, y, "o", ms=4.2, mfc=GROUP[g] if sig else "white", mec=GROUP[g], mew=1.1, zorder=3)
         ax.set_xlim(lo_all - 0.04, hi_all + 0.03)
         ax.set_xticks([0, 0.1, 0.2, 0.3, 0.4]); ax.set_xticklabels(["0", ".1", ".2", ".3", ".4"])
-        ax.set_title(f"{name}", fontproperties=title_font, fontsize=8.5, color="#222222", pad=10)
-        ax.text(0.5, 1.015, f"MinGuard AUROC {d['ours'][b]:.3f}", transform=ax.transAxes, ha="center",
-                va="bottom", fontsize=6, color=C["gray"])
+        ax.set_title(f"{name}", fontproperties=title_font, fontsize=8.5, color="#222222", pad=5)
         ax.grid(axis="x", color="#dde1e6", lw=0.5, zorder=0)
         ax.tick_params(axis="y", length=0)
         ax.spines["left"].set_visible(False)
@@ -134,8 +132,8 @@ def fig_risk(d, title_font):
             ax.text(1.04, y, f"{100 * r['miss'][0]:.1f}", va="center", ha="left", fontsize=6, color=C["gray"])
             ax.text(1.27, y, f"{100 * r['false_block'][0]:.1f}", va="center", ha="left", fontsize=6,
                     color=C["gray"])
-        ax.text(1.04, len(guards) - 0.35, "miss", fontsize=5.5, color=C["gray"], ha="left", va="bottom")
-        ax.text(1.27, len(guards) - 0.35, "f.b.", fontsize=5.5, color=C["gray"], ha="left", va="bottom")
+        ax.text(1.04, len(guards) - 0.35, "miss", fontsize=6, color=C["gray"], ha="left", va="bottom")
+        ax.text(1.27, len(guards) - 0.35, "f.b.", fontsize=6, color=C["gray"], ha="left", va="bottom")
         ax.set_xlim(0, 1.5)
         ax.set_xticks([0, 0.5, 1]); ax.set_xticklabels(["0", "50%", "100%"], fontsize=6)
         ax.spines["bottom"].set_bounds(0, 1)
@@ -152,7 +150,7 @@ def fig_risk(d, title_font):
            plt.Rectangle((0, 0), 1, 1, color=C["red"], label="blocked"),
            plt.Rectangle((0, 0), 1, 1, color="#F6D4B5", label="escalated"),
            Line2D([], [], ls="", label="numbers: mean miss and false-block rate, %")]
-    fig.legend(handles=leg, loc="lower center", ncol=4, fontsize=6.3, bbox_to_anchor=(0.55, -0.015),
+    fig.legend(handles=leg, loc="lower center", ncol=4, fontsize=6, bbox_to_anchor=(0.55, -0.015),
                handlelength=1.2, columnspacing=1.4)
     fig.tight_layout(rect=(0, 0.06, 1, 1), w_pad=0.4)
     fig.savefig(OUT / "fig_risk.pdf")
@@ -163,7 +161,7 @@ def fig_budget(title_font):
     res = json.load(open(P.RUNS / "label_budget.json"))
     ns = [25, 50, 100, 200]
     col = {"heldout": C["purple"], "real": C["blue"], "new_model": C["orange"], "new_db": C["green"]}
-    fig, ax = plt.subplots(figsize=(3.4, 1.85))
+    fig, ax = plt.subplots(figsize=(3.5, 1.9))   # 与 \columnwidth（3.5in）同宽，印刷字号即设定字号
     for b, name in M.BENCH_NAMES.items():
         for g, ls, lw, mk in (("jev_decomposed", "-", 1.6, "o"), ("jev27b_decomposed", (0, (2.5, 1.5)), 1.0, None)):
             pts = [(n, res[f"{b}|{g}|{n}"]["auto"]) for n in ns if f"{b}|{g}|{n}" in res]
